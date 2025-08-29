@@ -463,8 +463,14 @@ public class ClickHouseDataTypeMapper {
         } else if (type == Schema.Type.ARRAY) {
             ClickHouseDataType dt = getClickHouseDataType(
                     Schema.Type.valueOf(schemaName), null);
+            Object[] casted = {};
+            try {
+                    casted = ((ArrayList) value).toArray();
+            } catch (java.lang.ClassCastException e) {
+                    // ignore
+            }
             ps.setArray(index, ps.getConnection().createArrayOf(
-                    dt.name(), ((ArrayList) value).toArray()));
+                    dt.name(), casted));
         } else {
             result = false;
         }
